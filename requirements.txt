@@ -1,0 +1,5 @@
+surya-ocr==0.17.1
+pymupdf>=1.24
+pillow>=10.0
+numpy>=1.26
+requests>=2.31
