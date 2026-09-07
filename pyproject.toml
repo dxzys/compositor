@@ -20,3 +20,6 @@ compositor = "compositor.cli:main"
 
 [tool.setuptools]
 packages = ["compositor"]
+
+[tool.setuptools.package-data]
+compositor = ["data/*.json"]
