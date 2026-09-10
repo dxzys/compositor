@@ -7,6 +7,7 @@ left in place.
 from __future__ import annotations
 
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -90,6 +91,10 @@ def export_corpus(
             issue_dir = output_dir / issue["issue_id"]
             articles_path = issue_dir / "articles.ndjson"
             blocks_path = issue_dir / "blocks.ndjson"
+            if not articles_path.exists() and not blocks_path.exists():
+                print(f"warning: {issue['issue_id']} is indexed but has no readable output in {issue_dir}; skipping", file=sys.stderr)
+                continue
+            stats["issues"] += 1
             corrections = load_corrections(issue_dir) if use_corrected else {}
 
             if articles_path.exists():
@@ -120,7 +125,6 @@ def export_corpus(
                     f.write(json.dumps(_row_from_block(block, issue)) + "\n")
                     stats["blocks"] += 1
                     stats["words"] += len(block.get("text_normalized", "").split())
-            stats["issues"] += 1
 
     manifest = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
