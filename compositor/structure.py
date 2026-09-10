@@ -743,13 +743,16 @@ def extract_issue_metadata(
 ) -> Dict:
     import fitz
 
-    doc = fitz.open(str(pdf_path))
-    try:
-        page0 = doc[0] if len(doc) else None
-        embedded_first = page0.get_text("text") if page0 else ""
-        embedded_top_band = _embedded_text_top_band(page0) if page0 else ""
-    finally:
-        doc.close()
+    embedded_first = ""
+    embedded_top_band = ""
+    if pdf_path is not None and Path(pdf_path).exists:
+        doc = fitz.open(str(pdf_path))
+        try:
+            page0 = doc[0] if len(doc) else None
+            embedded_first = page0.get_text("text") if page0 else ""
+            embedded_top_band = _embedded_text_top_band(page0) if page0 else ""
+        finally:
+            doc.close()
 
     first_page = pages[0] if pages else None
     inner_header_texts = [_page_header_text(p) for p in pages[1:]] if pages else []
